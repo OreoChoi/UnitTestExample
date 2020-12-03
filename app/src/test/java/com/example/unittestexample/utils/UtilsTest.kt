@@ -1,9 +1,13 @@
 package com.example.unittestexample.utils
 
+import android.view.View
 import org.junit.Ignore
 import org.junit.jupiter.api.*
 
 import org.junit.jupiter.api.Assertions.*
+import java.io.IOException
+import java.lang.IllegalArgumentException
+import java.time.Duration
 
 internal class UtilsTest {
 
@@ -30,46 +34,82 @@ internal class UtilsTest {
     //Disabled 테스트를 위한 함수입니다.
     @Disabled("Not use - anyTest")
     @Test
-    fun anyTest(){
+    fun anyTest() {
         println("anyTest")
     }
 
-    //문자열을 2개씩 자르는 테스트 입니다.
+    //짝수 문자열을 2개씩 자르는 테스트 입니다.
+    //assertArrayEqual은 배열끼리 동일한 값을 가졌는지 체크합니다.
     @Test
-    fun cutTwoWord() {
-        //TC1
+    fun cutTwoWordEven() {
         val keyword: String = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        isEven(keyword.length)
-        printCutList(util.cutTwoWord(keyword))
-
-        //TC2
-        val keyword1: String = """HELLO WORLD
-            |FIND WORD
-        """.trimMargin()
-        isEven(keyword1.length)
-        printCutList(util.cutTwoWord(keyword1))
-
-        //TC3
-        val keyword2: String = "CRY FIND"
-        isEven(keyword2.length)
-        printCutList(util.cutTwoWord(keyword2))
-
-        //TC4
-        val keyword3: String = ""
-        isEven(keyword3.length)
-        printCutList(util.cutTwoWord(keyword3))
+        val checkList: Array<String> =
+            arrayOf("AB", "CD", "EF", "GH", "IJ", "KL", "MN", "OP", "QR", "ST", "UV", "WX", "YZ")
+        assertArrayEquals(checkList, util.cutTwoWord(keyword))
     }
 
-    private fun isEven(strLength: Int) = if (strLength % 2 == 0) {
-        println("짝수입니다.")
-    } else {
-        println("홀수입니다.")
+    //홀수 문자열을 2개씩 자르는 테스트 입니다.
+    @Test
+    fun cutTwoWordOdd() {
+        val keyword2: String = "ABC"
+        val checkList2: Array<String> = arrayOf("AB", "C")
+        assertArrayEquals(checkList2, util.cutTwoWord(keyword2))
     }
 
-    private fun printCutList(cutList: Array<String>) {
-        for (str in cutList) {
-            print("$str ")
+    //값이 null인지 확인합니다.
+    //assertTrue는 현재 조건이 참인지 검사합니다.
+    @Test
+    fun isNull() {
+        val name: String? = null
+        assertTrue(null == name)
+    }
+
+    //assertTimeout은 정해진 시간내로 처리되는지 확인합니다.
+    @Test
+    fun testFactorial() {
+        assertTimeout(Duration.ofMillis(10)) {
+            Thread.sleep(100)
         }
-        println("\n")
+    }
+
+    //assertEqual은 대입한 두개의 값이 일치해야 테스트를 성공 시킵니다.
+    @Test
+    fun testEqual() {
+        val myName: String = "Choi"
+        val herName: String = "Kim"
+        val friendName: String = "Choi"
+
+        //주석 처리된 코드는 error 발생
+        //assertEquals(myName,herName,"서로 이름이 같지 않습니다.")
+        assertEquals(myName, friendName, "서로 이름이 같지 않습니다.")
+    }
+
+    //assertAll 한가지가 아닌 다수의 테스트가 필요할때 사용합니다.
+    @Test
+    fun testEqualAll() {
+        val myName: String = "Choi"
+        val youName: String = "Choi"
+        val myAge: Int = 28
+        val myList: ArrayList<Int> = ArrayList()
+        val youList: ArrayList<Int> = ArrayList()
+
+        assertAll({ assertEquals(myName, youName) },
+            { assertNotNull(myAge) },
+            { assertEquals(myList, youList) })
+    }
+
+    /**
+     * assertThrows(체크할 exception.class,발생할 exception)
+     * 예외 클래스가 일치하면 test passed가 된다.
+     * 하지만 예외 클래스만 일치하지 않고, 예외 메세지까지 일치되어야 하므로
+     * 일치하는 것이 좋다.
+     */
+    @Test
+    fun testThrows() {
+        val exception = assertThrows(IllegalArgumentException().javaClass) {
+            Study(-10)
+        }
+
+        assertEquals("The price cannot be below zero", exception.message)
     }
 }
