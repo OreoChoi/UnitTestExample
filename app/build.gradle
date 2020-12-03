@@ -16,6 +16,10 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    testOptions{
+        unitTests.returnDefaultValues = true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -45,4 +49,8 @@ dependencies {
     // (Optional) If you also have JUnit 4-based tests
     testImplementation "junit:junit:4.12"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.5.2"
+
+    //Mockito
+    androidTestImplementation("org.mockito:mockito-android:2.24.5")
+    testImplementation 'org.mockito:mockito-inline:2.21.0'
 }

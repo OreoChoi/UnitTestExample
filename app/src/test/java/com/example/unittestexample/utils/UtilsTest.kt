@@ -1,14 +1,14 @@
 package com.example.unittestexample.utils
 
-import android.view.View
-import org.junit.Ignore
-import org.junit.jupiter.api.*
 
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
-import java.io.IOException
 import java.lang.IllegalArgumentException
 import java.time.Duration
 
+/**
+ * Junit을 활용한 Unit테스트
+ * */
 internal class UtilsTest {
 
     val util: Utils = Utils()
